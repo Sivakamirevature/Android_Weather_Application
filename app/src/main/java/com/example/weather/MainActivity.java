@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
             Log.i("main",main);
             Log.i("description",description);
             result.setText("Main"+main+
-                    "/nDescription"+description +
-                    "/nTemprature"+temprature+
-                    "/nVisibility"+visibility);
+                    "\nDescription"+description +
+                    "\nTemprature"+temprature+
+                    "\nVisibility"+visibility);
         } catch (Exception e) {
             e.printStackTrace();
         }
