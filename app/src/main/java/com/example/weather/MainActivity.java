@@ -20,46 +20,47 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
-    public class Weather1 extends AsyncTask<String, Void, String>{
-        TextView cityName, result;
+
+    TextView cityName, result;
+
+    public void search(View view) {
         Button searchButton;
-
-        public void search(View view){
-            cityName = findViewById(R.id.cityName);
-            searchButton = findViewById(R.id.searchButton);
-            result = findViewById(R.id.result);
-            String city = cityName.getText().toString();
-            String content;
-            Weather1 weather = new Weather1();
-
-            try {
-                content = weather.execute("https://openweathermap.org/data/2.5/weather?q=" + city + "&appid=439d4b804bc8187953eb36d2a8c26a02").get();
-                Log.i("Content DATA :", content);
-                JSONObject jsonObject = new JSONObject(content);
-                String weatherData = jsonObject.getString("weather");
-                String mainTemprature = jsonObject.getString("main");
-                double visibility;
-                Log.i("Weather Data", weatherData);
-                JSONArray array = new JSONArray(weatherData);
-                String main = "", description= "", temprature = "";
-                for(int i = 0; i<array.length();i++){
-                    JSONObject weatherPart = array.getJSONObject(i);
-                    main = weatherPart.getString("main");
-                    description = weatherPart.getString("description");
-                }
-                JSONObject mainPart = new JSONObject(mainTemprature);
-                temprature = mainPart.getString("temp");
-                visibility = Double.parseDouble(jsonObject.getString("visibility"));
-                Log.i("main",main);
-                Log.i("description",description);
-                result.setText("Main"+main+
-                        "/nDescription"+description +
-                        "/nTemprature"+temprature+
-                        "/nVisibility"+visibility);
-            } catch (Exception e) {
-                e.printStackTrace();
+        cityName = findViewById(R.id.cityName);
+        searchButton = findViewById(R.id.searchButton);
+        result = findViewById(R.id.result);
+        String city = cityName.getText().toString();
+        String content;
+        Weather1 weather = new Weather1();
+        try {
+            content = weather.execute("https://openweathermap.org/data/2.5/weather?q=" + city + "&appid=439d4b804bc8187953eb36d2a8c26a02").get();
+            Log.i("Content DATA :", content);
+            JSONObject jsonObject = new JSONObject(content);
+            String weatherData = jsonObject.getString("weather");
+            String mainTemprature = jsonObject.getString("main");
+            double visibility;
+            Log.i("Weather Data", weatherData);
+            JSONArray array = new JSONArray(weatherData);
+            String main = "", description= "", temprature = "";
+            for(int i = 0; i<array.length();i++){
+                JSONObject weatherPart = array.getJSONObject(i);
+                main = weatherPart.getString("main");
+                description = weatherPart.getString("description");
             }
+            JSONObject mainPart = new JSONObject(mainTemprature);
+            temprature = mainPart.getString("temp");
+            visibility = Double.parseDouble(jsonObject.getString("visibility"));
+            Log.i("main",main);
+            Log.i("description",description);
+            result.setText("Main"+main+
+                    "/nDescription"+description +
+                    "/nTemprature"+temprature+
+                    "/nVisibility"+visibility);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    public class Weather1 extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... address) {
