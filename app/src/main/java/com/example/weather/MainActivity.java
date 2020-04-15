@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
             visibility = Double.parseDouble(jsonObject.getString("visibility"));
             Log.i("main",main);
             Log.i("description",description);
-            result.setText("Main"+main+
-                    "\nDescription"+description +
-                    "\nTemprature"+temprature+
-                    "\nVisibility"+visibility);
+            result.setText("Main: "+main+
+                    "\nDescription: "+description +
+                    "\nTemprature: "+temprature+
+                    "\nVisibility: "+visibility/1000);
         } catch (Exception e) {
             e.printStackTrace();
         }
