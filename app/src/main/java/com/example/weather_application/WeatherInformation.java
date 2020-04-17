@@ -1,13 +1,15 @@
-package com.example.weather;
+package com.example.weather_application;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,12 +22,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class WeatherInformation extends AppCompatActivity {
+    TextView text;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_weather_information);
+        String cname;
+        Intent intent = getIntent();
+        cname  = intent.getStringExtra("cityname");
+        cityName = findViewById(R.id.cityName);
+        cityName.setText(cname);
+    }
 
     TextView cityName, result;
 
     public void search(View view) {
         Button searchButton;
-        cityName = findViewById(R.id.cityName);
         searchButton = findViewById(R.id.searchButton);
         result = findViewById(R.id.result);
         String city = cityName.getText().toString();
@@ -86,10 +99,5 @@ public class WeatherInformation extends AppCompatActivity {
             }
             return null;
         }
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather_information);
     }
 }
