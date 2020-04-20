@@ -2,17 +2,21 @@ package com.example.weather_application;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -28,6 +32,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import static android.widget.Toast.*;
+
 public class MainActivity extends AppCompatActivity {
     ListView citiesList;
     ArrayList<String> cities = new ArrayList<String>();
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         updateListView();
     }
 
-    public void updateListView(){
+    public void updateListView() {
         Cities cityObj = new Cities();
         try {
             String response = cityObj.execute("https://api.openaq.org/v1/cities?country=IN").get();
@@ -48,12 +54,13 @@ public class MainActivity extends AppCompatActivity {
             String results = jsonObject.getString("results");
             Log.i("\nData", results);
             JSONArray array = new JSONArray(results);
-            String city= "";
-            for(int i = 0; i<array.length();i++){
+            String city = "";
+            for (int i = 0; i < array.length(); i++) {
                 JSONObject part = array.getJSONObject(i);
                 city = part.getString("city");
                 cities.add(city);
             }
+            makeText(this, String.valueOf(cities), LENGTH_SHORT).show();
             Log.i("cities Array: ", String.valueOf(cities));
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -63,42 +70,26 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        citiesList = (ListView)findViewById(R.id.cityListView);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.activity_listview, R.id.textView, cities);
-        citiesList.setAdapter(arrayAdapter);
-        citiesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               Intent intent = new Intent(MainActivity.this, WeatherInformation.class);
-               intent.putExtra("cityname", cities.get(position));
-               startActivity(intent);
-            }
-        });
-//        RecycleView recycleView = new RecycleView();
-//        recycleView.setCitiesList();
+//        citiesList = (ListView)findViewById(R.id.cityListView);
+//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.activity_listview, R.id.textView, cities);
+//        citiesList.setAdapter(arrayAdapter);
+//        citiesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//               Intent intent = new Intent(MainActivity.this, WeatherInformation.class);
+//               intent.putExtra("cityname", cities.get(position));
+//               startActivity(intent);
+//            }
+//        });
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.cityRecycleView);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        MyAdapter mAdapter = new MyAdapter(this,cities);
+        recyclerView.setAdapter(mAdapter);
     }
 
-//    public class RecycleView extends RecyclerView.Adapter<MyListAdapter.ViewHolder>{
-//        public void setCitiesList(){
-//
-//        }
-//
-//        @NonNull
-//        @Override
-//        public MyListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//            return null;
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(@NonNull MyListAdapter.ViewHolder holder, int position) {
-//
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return 0;
-//        }
-//    }
     public class Cities extends AsyncTask<String, Void, String>{
 
         @Override
@@ -124,6 +115,53 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return null;
+        }
+    }
+
+    private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+        private  ArrayList<String> mDataset;
+        private Context context;
+
+        public static class MyViewHolder extends RecyclerView.ViewHolder {
+            // each data item is just a string in this case
+            public TextView textView;
+            public MyViewHolder(TextView v) {
+                super(v);
+                textView = v;
+            }
+        }
+        public MyAdapter(Context context1, ArrayList<String> myDataset) {
+            context = context1;
+            mDataset = myDataset;
+        }
+
+        @NonNull
+        @Override
+        public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            TextView v = (TextView) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.activity_listview, parent, false);
+            MyViewHolder vh = new MyViewHolder(v);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, final int position) {
+            holder.textView.setText(mDataset.get(position));
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context,WeatherInformation.class);
+                    intent.putExtra("cityname",mDataset.get(position));
+                    context.startActivity(intent);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            int size = mDataset.size();
+           Log.i("\n\nSize:", String.valueOf(size));
+           return mDataset.size();
         }
     }
 }

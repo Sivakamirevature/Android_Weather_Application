@@ -100,4 +100,9 @@ public class WeatherInformation extends AppCompatActivity {
             return null;
         }
     }
+
+    public void back(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        this.startActivity(intent);
+    }
 }

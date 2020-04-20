@@ -27,13 +27,13 @@
         android:id="@+id/searchButton"
         android:layout_width="157dp"
         android:layout_height="59dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="48dp"
         android:onClick="search"
         android:text="@android:string/search_go"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/cityName"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="@+id/cityName"
         app:layout_constraintTop_toBottomOf="@+id/cityName" />
 
@@ -50,4 +50,16 @@
         app:layout_constraintStart_toStartOf="@+id/searchButton"
         app:layout_constraintTop_toTopOf="@+id/searchButton"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="228dp"
+        android:onClick="back"
+        android:text="Back"
+        app:layout_constraintEnd_toEndOf="@+id/searchButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/searchButton"
+        app:layout_constraintTop_toTopOf="@+id/searchButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
